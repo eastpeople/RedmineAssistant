@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="js/common.js"></script>
+
+    <link rel="stylesheet" href="css/common.css">
+
+</head>
+
+<body>
+	<h3>신규 이슈 생성하기</h3>
+	<div class="topzone">
+		<button onClick="createIssue()">만들기</button>
+	</div>
+	<div class="tabbutton">
+		<a class="first" href="#">개발</a><a href="#">PM</a>
+	</div>
+	<div class="tab" id="tab0">
+		<div id="project">
+			<h5>프로젝트</h5>
+			<select>
+				<option value=61>BTV UI5.0 프로젝트</option>
+			</select>
+		</div>
+		<div id="subject">
+			<h5>제목</h5>
+			<input type="text" value=""/>
+		</div>
+		<div id="description">
+			<h5>목적</h5>
+			<textarea></textarea>
+		</div>
+		<div id="description">
+			<h5>내용</h5>
+			<textarea></textarea>
+		</div>
+		<div id="description">
+			<h5>대상</h5>
+			<textarea></textarea>
+		</div>
+		<div id="description">
+			<h5>개발 관련 문서</h5>
+			<textarea></textarea>
+		</div>
+		<div id="description">
+			<h5>관련 일감이 있으면 연결</h5>
+			<textarea></textarea>
+		</div>
+		<div id="description">
+			<h5>기타</h5>
+			<textarea></textarea>
+		</div>
+	</div>
+	
+	<div class="tab" id="tab1" style="display:none;">
+		<div id="project">
+			<h5>프로젝트</h5>
+			<input type="text" value=""/>
+		</div>
+		<div id="subject">
+			<h5>제목</h5>
+			<input type="text" value=""/>
+		</div>
+		<div id="description">
+			<h5>예정일</h5>
+			<textarea></textarea>
+		</div>
+		<div id="description">
+			<h5>참석자</h5>
+			<textarea></textarea>
+		</div>
+		<div id="description">
+			<h5>PM 요청 내용 (요청메일 내용 첨부 혹은 기타 요청 문의 내용 작성)</h5>
+			<textarea></textarea>
+		</div>
+		<div id="description">
+			<h5>관련 문서 (PM 작업 계획서 첨부)</h5>
+			<textarea></textarea>
+		</div>
+		<div id="description">
+			<h5>관련된 BMT 일감 연결</h5>
+			<textarea></textarea>
+		</div>
+		
+	</div>
+    
+
+</body>
+
+<script>
+	var tabFocus = 0;
+
+    $(document).ready(function() {
+        
+    });
+
+    function createIssue() {
+		var description = "";
+		var tempDesc = "";
+		var tabname = "#tab" + tabFocus;
+		
+		var project = $(tabname).find("#project").find("select").val();
+		var subject = $(tabname).find("#subject").find("input:text").val();
+	
+		//description = $(tabname).find("#description").find("textarea").val();
+		
+		
+		$(tabname).find('[id="description"]').each(function(){
+			description += "* "+ $(this).find("h5").text() + "\n";
+			tempDesc = $(this).find("textarea").val();
+			if (tempDesc != "") {
+				description += "** " + tempDesc + "\n";
+			}
+			tempDesc = "";
+		});
+		
+	
+        var sendObj = {
+        	project_id : project
+        	, tracker_id : 2
+        	, status_id : 1
+        	, priority_id : 2
+        	, subject : subject
+        	, description : description
+        }
+		
+		var issueObj = {
+        	issue : sendObj
+        }
+		
+        ajaxJsonPost("/createissue", issueObj, function(data) {
+            alert(data);
+
+        });
+    }
+
+</script>
+
+</html>

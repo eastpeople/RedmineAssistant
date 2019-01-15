@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: ep-redmine
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: newea
+Implementation-Vendor-Id: com.zinnaworks
+Build-Jdk: 1.8.0_161
+Implementation-URL: http://projects.spring.io/spring-boot/ep-redmine/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="js/common.js"></script>
+
+    <link rel="stylesheet" href="css/common.css">
+
+</head>
+
+<body>
+
+    <div id="divIssuesMe">
+        <h3>나의 미해결 이슈</h3>
+
+    </div>
+    <hr/>
+    <div id="divIssuesMeComplete">
+        <h3>최근에 해결된 이슈</h3>
+
+    </div>
+
+</body>
+
+<script>
+    $(document).ready(function() {
+        myIssueCompleteList();
+        myIssueIncompleteList();
+    });
+
+    function myIssueIncompleteList() {
+        var sendObj = {};
+        sendObj["assigned_to_id"] = "me";
+        ajaxJsonp("/issues.json", sendObj, function(data) {
+            var issueMsg = "";
+            if (data.total_count == 0) {
+                issueMsg = $("<p></p>").text(noneIssueMsg);
+                $("#divIssuesMe").append(issueMsg);
+            } else {
+                $.each(data.issues, function(index, value) {
+                    issueMsg += "<li>" + value.project.name + " / " + value.subject + "</li>";
+                });
+                issueMsg = "<ul>" + issueMsg + "</ul>";
+                $("#divIssuesMe").append(issueMsg);
+            }
+
+        });
+    }
+
+    function myIssueCompleteList() {
+        var sendObj = {};
+        sendObj["assigned_to_id"] = "me";
+        sendObj["status_id"] = "closed";
+        sendObj["limit"] = "5";
+        ajaxJsonp("/issues.json", sendObj, function(data) {
+            var issueMsg = "";
+            if (data.total_count == 0) {
+                issueMsg = $("<p></p>").text(noneCompleteIssueMsg);
+                $("#divIssuesMeComplete").append(issueMsg);
+            } else {
+                $.each(data.issues, function(index, value) {
+                    issueMsg += "<li>" + value.project.name + " / " + value.subject + "</li>";
+                });
+                issueMsg = "<ul>" + issueMsg + "</ul>";
+                $("#divIssuesMeComplete").append(issueMsg);
+            }
+
+        });
+    }
+
+</script>
+
+</html>

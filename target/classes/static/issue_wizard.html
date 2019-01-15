@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/scenario.js"></script>
+
+    <link rel="stylesheet" href="css/common.css">
+
+</head>
+
+<body>
+
+	<div class="main">
+		<div id="divDate">
+			<p></p>
+		</div>
+		<div id="divSelect">
+		</div>
+		<div id="divMessage">
+			<p></p>
+		</div>
+	</div>
+    
+
+</body>
+
+<script>
+	var current_code = "startingPoint";
+	var current_progress = 0;
+	var link_code = "";
+	var link_progress = 0;
+	var current_type = "01";
+
+	var cnt = 0;
+	var speed = 30; //글자가 찍히는 속도
+	var timer1 = null;
+	var cursor = "_";
+	
+	var subject = "";
+	var body = "";
+	
+	function printMessage(msg) {
+	    
+		cnt++;
+	    if (cnt < msg.length) {
+			$("#divMessage").find("p").text(msg.substring(0, cnt) + "_");
+		    timer1 = setTimeout('printMessage("' + msg + '")', speed);
+	    } else if (cnt == msg.length) {
+			$("#divMessage").find("p").text(msg);
+			cnt = 0;
+	    }
+	    
+	}
+	
+	function printSelect(select, type) {
+		$("#divSelect").empty();
+		
+		var temp_html = "<ul>";
+		
+		for (var k = 0; k < select.length; k++) {
+			temp_html += "<li>";
+			if (type == "02") {
+				temp_html += "<a href='#' onClick='changeProgress(\"" + select[k].code + "\")'>" + select[k].script + "</a>";
+			} else if (type == "03") {
+				temp_html += "<a href='#' onClick='saveSubject(\"" + select[k].text + "\")'>" + select[k].script + "</a>";
+			} else if (type == "04") {
+				temp_html += "<a href='#' onClick='saveBody(\"" + select[k].text + "\")'>" + select[k].script + "</a>";
+			}
+			temp_html += "</li>";
+		}
+		temp_html += "</ul>";
+		$("#divSelect").append(temp_html);
+		$("#divSelect").show();
+	}
+	
+	function nextProgress() {
+		var type = "";
+		var temp;
+		if (0 < scen[current_code].length) {
+			temp = scen[current_code][current_progress];
+			type = temp.type;
+			current_type = type;
+			if (type == "01") {
+				printMessage(temp.script);
+			} else if (type == "02") {
+				printSelect(temp.select, type);
+			} else if (type == "03") {
+				printSelect(temp.select, type);
+			} else if (type == "04") {
+				printSelect(temp.select, type);
+			} else if (type == "11") {
+				
+				var new_index = current_progress;
+				
+				for (var o = 0; o < scen[temp.code].length; o ++) {
+					if (o > 0) {
+						scen[current_code].splice(new_index + o, 0, scen[temp.code][o]);
+					} else {
+						scen[current_code][new_index] = scen[temp.code][o];
+					}
+				}
+				nextProgress();
+			}
+		}
+	}
+	
+	function changeProgress(code) {
+		current_code = code;
+		current_progress = 0;
+		
+		$("#divSelect").hide();
+		
+		nextProgress();
+	}
+	
+	function saveSubject(text) {
+		current_progress++;
+		nextProgress();
+		subject += text + " ";
+	}
+	
+	function saveBody(text) {
+		current_progress++;
+		nextProgress();
+		body += text + " ";
+	}
+	
+	$(document).ready(function() {
+		//printMessage(text1);
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth()+1; //January is 0!
+		var yyyy = today.getFullYear();
+		
+		$("#divSelect").hide();
+		$("#divDate").find("p").text(mm + "월 " + dd + "일");
+		nextProgress();
+	});
+
+
+    $("#divMessage").click(function() {
+    	if (current_type == "01") {
+    		current_progress++;
+    		nextProgress();
+    	}
+	});
+
+	/* $("#divMessage a").click(function() {
+	}); */
+	
+</script>
+
+</html>
