@@ -79,6 +79,7 @@
 	}
 	
 	function nextProgress() {
+		$("#divSelect").hide();
 		var type = "";
 		var temp;
 		if (0 < scen[current_code].length) {
@@ -112,8 +113,6 @@
 	function changeProgress(code) {
 		current_code = code;
 		current_progress = 0;
-		
-		$("#divSelect").hide();
 		
 		nextProgress();
 	}
